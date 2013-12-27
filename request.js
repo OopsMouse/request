@@ -391,7 +391,11 @@ Request.prototype.init = function (options) {
     if (self._aborted) return
 
     if (self._form) {
-      self.setHeaders(self._form.getHeaders())
+      var length = self._form.getLengthSync()
+      if(self.headers['content-length']) {
+        length += self.headers['content-length']
+      }
+      self.setHeaders(self._form.getHeaders({'content-length': length}))
       self._form.pipe(self)
     }
     if (self.body) {
